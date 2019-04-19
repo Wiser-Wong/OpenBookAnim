@@ -5,5 +5,7 @@ package com.wiser.anim;
  */
 public interface OpenBookAnimEndListener {
 
+	void startAnim();
+
 	void endAnim();
 }

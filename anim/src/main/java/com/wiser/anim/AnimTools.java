@@ -112,6 +112,7 @@ public class AnimTools {
 			@Override public void onAnimationStart(Animator animation) {
 				super.onAnimationStart(animation);
 				magnifyView.bringToFront();
+				if (endListener != null) endListener.startAnim();
 			}
 
 			@Override public void onAnimationEnd(Animator animation) {
