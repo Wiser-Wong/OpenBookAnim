@@ -1,9 +1,10 @@
 package com.wiser.openbookanim;
 
 import com.wiser.anim.AnimTools;
-import com.wiser.anim.OpenBookAnimEndListener;
+import com.wiser.anim.OpenBookAnimListener;
 import com.wiser.anim.PhotoMeasureModel;
 
+import android.animation.Animator;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -40,17 +41,17 @@ public class MainActivity extends AppCompatActivity {
 				photoMeasureModel.coverBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.cover);
 				if (isOpen) {
 					isOpen = false;
-					AnimTools.openBookAnim(photoMeasureModel, ivCover, flContent, MainActivity.this, new OpenBookAnimEndListener() {
+					AnimTools.openBookAnim(photoMeasureModel, ivCover, flContent, MainActivity.this, new OpenBookAnimListener() {
 
-						@Override public void endAnim() {
+						@Override public void endAnim(Animator animator) {
 							Toast.makeText(MainActivity.this, "打开动画结束", Toast.LENGTH_LONG).show();
 						}
 					});
 				} else {
 					isOpen = true;
-					AnimTools.closeBookAnim(photoMeasureModel, ivCover, flContent, MainActivity.this, new OpenBookAnimEndListener() {
+					AnimTools.closeBookAnim(photoMeasureModel, ivCover, flContent, MainActivity.this, new OpenBookAnimListener() {
 
-						@Override public void endAnim() {
+						@Override public void endAnim(Animator animator) {
 							Toast.makeText(MainActivity.this, "关闭动画结束", Toast.LENGTH_LONG).show();
 						}
 					});

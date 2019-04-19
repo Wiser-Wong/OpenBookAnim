@@ -27,7 +27,7 @@ public class AnimTools {
 	 * @param coverImg
 	 * @param activity
 	 */
-	public static void openBookAnim(PhotoMeasureModel photoMeasureModel, final ImageView coverImg, final View contentView, final Activity activity, OpenBookAnimEndListener endListener) {
+	public static void openBookAnim(PhotoMeasureModel photoMeasureModel, final ImageView coverImg, final View contentView, final Activity activity, OpenBookAnimListener animListener) {
 		coverImg.setImageBitmap(photoMeasureModel.coverBitmap);
 		ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) coverImg.getLayoutParams();
 		params.leftMargin = photoMeasureModel.left;
@@ -46,7 +46,7 @@ public class AnimTools {
 		openBookRotate3DAnim.setInterpolator(new DecelerateInterpolator());
 		coverImg.startAnimation(openBookRotate3DAnim);
 
-		magnifyAnim(activity, photoMeasureModel, contentView, endListener);
+		magnifyAnim(activity, photoMeasureModel, contentView, animListener);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class AnimTools {
 	 * @param coverImg
 	 * @param activity
 	 */
-	public static void closeBookAnim(PhotoMeasureModel photoMeasureModel, final ImageView coverImg, final View contentView, Activity activity, OpenBookAnimEndListener endListener) {
+	public static void closeBookAnim(PhotoMeasureModel photoMeasureModel, final ImageView coverImg, final View contentView, Activity activity, OpenBookAnimListener endListener) {
 		float startScaleX = (float) getScreenWidth(activity) / photoMeasureModel.width;
 		float startScaleY = (float) getScreenHeight(activity) / photoMeasureModel.height;
 		final OpenBookRotate3DAnim openBookRotate3DAnim = new OpenBookRotate3DAnim(activity, -90, 0, coverImg.getLeft(), coverImg.getTop(), startScaleX, startScaleY, false);
@@ -93,7 +93,7 @@ public class AnimTools {
 	 * @param photoMeasureModel
 	 * @param magnifyView
 	 */
-	public static void magnifyAnim(Activity activity, PhotoMeasureModel photoMeasureModel, final View magnifyView, final OpenBookAnimEndListener endListener) {
+	public static void magnifyAnim(Activity activity, PhotoMeasureModel photoMeasureModel, final View magnifyView, final OpenBookAnimListener animListener) {
 		// 计算初始的缩放比例。最终的缩放比例为1。并调整缩放方向，使看着协调。
 		float startScaleX = (float) photoMeasureModel.width / getScreenWidth(activity);
 		float startScaleY = (float) photoMeasureModel.height / getScreenHeight(activity);
@@ -112,17 +112,27 @@ public class AnimTools {
 			@Override public void onAnimationStart(Animator animation) {
 				super.onAnimationStart(animation);
 				magnifyView.bringToFront();
-				if (endListener != null) endListener.startAnim();
+				if (animListener != null) animListener.startAnim(animation);
+			}
+
+			@Override public void onAnimationPause(Animator animation) {
+				super.onAnimationPause(animation);
+				if (animListener != null) animListener.pauseAnim(animation);
+			}
+
+			@Override public void onAnimationRepeat(Animator animation) {
+				super.onAnimationRepeat(animation);
+				if (animListener != null) animListener.repeatAnim(animation);
 			}
 
 			@Override public void onAnimationEnd(Animator animation) {
 				super.onAnimationEnd(animation);
-				if (endListener != null) endListener.endAnim();
+				if (animListener != null) animListener.endAnim(animation);
 			}
 
 			@Override public void onAnimationCancel(Animator animation) {
 				super.onAnimationCancel(animation);
-				if (endListener != null) endListener.endAnim();
+				if (animListener != null) animListener.cancelAnim(animation);
 			}
 		});
 	}
@@ -134,7 +144,7 @@ public class AnimTools {
 	 * @param photoMeasureModel
 	 * @param shrinkView
 	 */
-	public static void shrinkAnim(Activity activity, PhotoMeasureModel photoMeasureModel, View shrinkView, final OpenBookAnimEndListener endListener) {
+	public static void shrinkAnim(Activity activity, PhotoMeasureModel photoMeasureModel, View shrinkView, final OpenBookAnimListener animListener) {
 		// 计算初始的缩放比例。最终的缩放比例为1。并调整缩放方向，使看着协调。
 		float startScaleX = (float) photoMeasureModel.width / getScreenWidth(activity);
 		float startScaleY = (float) photoMeasureModel.height / getScreenHeight(activity);
@@ -148,12 +158,29 @@ public class AnimTools {
 		set.setInterpolator(new DecelerateInterpolator());
 		set.addListener(new AnimatorListenerAdapter() {
 
+			@Override public void onAnimationStart(Animator animation) {
+				super.onAnimationStart(animation);
+				if (animListener != null) animListener.startAnim(animation);
+			}
+
+			@Override public void onAnimationPause(Animator animation) {
+				super.onAnimationPause(animation);
+				if (animListener != null) animListener.pauseAnim(animation);
+			}
+
+			@Override public void onAnimationRepeat(Animator animation) {
+				super.onAnimationRepeat(animation);
+				if (animListener != null) animListener.repeatAnim(animation);
+			}
+
 			@Override public void onAnimationEnd(Animator animation) {
-				if (endListener != null) endListener.endAnim();
+				super.onAnimationEnd(animation);
+				if (animListener != null) animListener.endAnim(animation);
 			}
 
 			@Override public void onAnimationCancel(Animator animation) {
-				if (endListener != null) endListener.endAnim();
+				super.onAnimationCancel(animation);
+				if (animListener != null) animListener.cancelAnim(animation);
 			}
 		});
 		set.start();
