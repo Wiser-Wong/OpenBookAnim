@@ -1,25 +1,20 @@
 package com.wiser.openbookanim;
 
+import com.wiser.anim.AnimTools;
+import com.wiser.anim.PhotoMeasureModel;
+
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Rect;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.wiser.anim.AnimTools;
-import com.wiser.anim.PhotoMeasureModel;
 
 public class MainActivity extends AppCompatActivity {
 
 	private ImageView	ivClick, ivCover;
 
 	private FrameLayout	flContent;
-
-	private TextView	textView;
 
 	private boolean		isOpen	= true;
 
@@ -29,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
 		ivClick = findViewById(R.id.iv_click);
 		ivCover = findViewById(R.id.iv_cover);
 		flContent = findViewById(R.id.fl_content);
-		textView = findViewById(R.id.text);
 
 		ivClick.setOnClickListener(new View.OnClickListener() {
 

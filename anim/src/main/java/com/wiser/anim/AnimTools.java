@@ -109,8 +109,7 @@ public class AnimTools {
 		set.start();
 		set.addListener(new AnimatorListenerAdapter() {
 
-			@Override
-			public void onAnimationStart(Animator animation) {
+			@Override public void onAnimationStart(Animator animation) {
 				super.onAnimationStart(animation);
 				magnifyView.bringToFront();
 			}
