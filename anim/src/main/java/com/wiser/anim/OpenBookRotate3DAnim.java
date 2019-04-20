@@ -77,7 +77,7 @@ public class OpenBookRotate3DAnim extends Animation {
 		matrix.setValues(mValues); // 重新赋值
 
 		if (reverse) {
-			matrix.postScale(1 + (mScaleX - 1) * interpolatedTime, 1 + (mScaleY - 1) * interpolatedTime, mPivotX - mMarginLeft, mPivotY - mMarginTop);
+			matrix.postScale(1 + (mScaleX - 1) * interpolatedTime, 1 + (mScaleY - 1) * interpolatedTime, mPivotX - mMarginLeft , mPivotY - mMarginTop);
 		} else {
 			matrix.postScale(1 + (mScaleX - 1) * (1 - interpolatedTime), 1 + (mScaleY - 1) * (1 - interpolatedTime), mPivotX - mMarginLeft, mPivotY - mMarginTop);
 		}

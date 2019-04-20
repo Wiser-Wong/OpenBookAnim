@@ -5,7 +5,7 @@ import android.animation.Animator;
 /**
  * 打开书动画
  */
-interface AnimListener {
+interface AnimatorListener {
 
 	void startAnim(Animator animation);
 
@@ -20,7 +20,7 @@ interface AnimListener {
 	void cancelAnim(Animator animation);
 }
 
-public abstract class OpenBookAnimListener implements AnimListener {
+public abstract class MAnimatorListener implements AnimatorListener {
 
 	@Override public void startAnim(Animator animation) {
 

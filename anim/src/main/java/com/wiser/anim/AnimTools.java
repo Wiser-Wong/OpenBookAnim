@@ -8,7 +8,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
 /**
@@ -27,7 +31,7 @@ public class AnimTools {
 	 * @param coverImg
 	 * @param activity
 	 */
-	public static void openBookAnim(PhotoMeasureModel photoMeasureModel, final ImageView coverImg, final View contentView, final Activity activity, OpenBookAnimListener animListener) {
+	public static void openBookAnim(PhotoMeasureModel photoMeasureModel, final ImageView coverImg, final View contentView, final Activity activity, OpenBookAnimationListener animationListener) {
 		coverImg.setImageBitmap(photoMeasureModel.coverBitmap);
 		ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) coverImg.getLayoutParams();
 		params.leftMargin = photoMeasureModel.left;
@@ -46,7 +50,7 @@ public class AnimTools {
 		openBookRotate3DAnim.setInterpolator(new DecelerateInterpolator());
 		coverImg.startAnimation(openBookRotate3DAnim);
 
-		magnifyAnim(activity, photoMeasureModel, contentView, animListener);
+		magnifyAnimation(activity, photoMeasureModel, contentView, animationListener);
 	}
 
 	/**
@@ -56,7 +60,7 @@ public class AnimTools {
 	 * @param coverImg
 	 * @param activity
 	 */
-	public static void closeBookAnim(PhotoMeasureModel photoMeasureModel, final ImageView coverImg, final View contentView, Activity activity, OpenBookAnimListener endListener) {
+	public static void closeBookAnim(PhotoMeasureModel photoMeasureModel, final ImageView coverImg, final View contentView, Activity activity, OpenBookAnimationListener animationListener) {
 		float startScaleX = (float) getScreenWidth(activity) / photoMeasureModel.width;
 		float startScaleY = (float) getScreenHeight(activity) / photoMeasureModel.height;
 		final OpenBookRotate3DAnim openBookRotate3DAnim = new OpenBookRotate3DAnim(activity, -90, 0, coverImg.getLeft(), coverImg.getTop(), startScaleX, startScaleY, false);
@@ -65,25 +69,7 @@ public class AnimTools {
 		openBookRotate3DAnim.setInterpolator(new DecelerateInterpolator());
 		coverImg.startAnimation(openBookRotate3DAnim);
 
-		shrinkAnim(activity, photoMeasureModel, contentView, endListener);
-	}
-
-	/**
-	 * 获得屏幕的宽度
-	 *
-	 * @return
-	 */
-	public static int getScreenWidth(Context context) {
-		return context.getResources().getDisplayMetrics().widthPixels;
-	}
-
-	/**
-	 * 获得屏幕的高度
-	 *
-	 * @return
-	 */
-	public static int getScreenHeight(Context context) {
-		return context.getResources().getDisplayMetrics().heightPixels;
+		shrinkAnimation(activity, photoMeasureModel, contentView, animationListener);
 	}
 
 	/**
@@ -93,7 +79,81 @@ public class AnimTools {
 	 * @param photoMeasureModel
 	 * @param magnifyView
 	 */
-	public static void magnifyAnim(Activity activity, PhotoMeasureModel photoMeasureModel, final View magnifyView, final OpenBookAnimListener animListener) {
+	public static void magnifyAnimation(Activity activity, PhotoMeasureModel photoMeasureModel, final View magnifyView, final OpenBookAnimationListener animationListener) {
+		// 计算初始的缩放比例。最终的缩放比例为1。并调整缩放方向，使看着协调。
+		float startScaleX = (float) photoMeasureModel.width / getScreenWidth(activity);
+		float startScaleY = (float) photoMeasureModel.height / getScreenHeight(activity);
+		ScaleAnimation scaleAnimation = new ScaleAnimation(startScaleX, 1f, startScaleY, 1f, 0f, 0f);
+		TranslateAnimation translateAnimation = new TranslateAnimation(photoMeasureModel.left, 0, photoMeasureModel.top, 0);
+		scaleAnimation.setFillAfter(true);
+		translateAnimation.setFillAfter(true);
+		AnimationSet set = new AnimationSet(true);
+		set.addAnimation(scaleAnimation);
+		set.addAnimation(translateAnimation);
+		set.setDuration(time);
+		set.setInterpolator(new DecelerateInterpolator());
+		magnifyView.startAnimation(set);
+		set.setAnimationListener(new Animation.AnimationListener() {
+
+			@Override public void onAnimationStart(Animation animation) {
+				if (animationListener != null) animationListener.startAnim(animation);
+			}
+
+			@Override public void onAnimationEnd(Animation animation) {
+				if (animationListener != null) animationListener.endAnim(animation);
+			}
+
+			@Override public void onAnimationRepeat(Animation animation) {
+				if (animationListener != null) animationListener.repeatAnim(animation);
+			}
+		});
+	}
+
+	/**
+	 * 缩小动画
+	 * 
+	 * @param activity
+	 * @param photoMeasureModel
+	 * @param shrinkView
+	 */
+	public static void shrinkAnimation(Activity activity, PhotoMeasureModel photoMeasureModel, View shrinkView, final OpenBookAnimationListener animationListener) {
+		// 计算初始的缩放比例。最终的缩放比例为1。并调整缩放方向，使看着协调。
+		float startScaleX = (float) photoMeasureModel.width / getScreenWidth(activity);
+		float startScaleY = (float) photoMeasureModel.height / getScreenHeight(activity);
+		ScaleAnimation scaleAnimation = new ScaleAnimation(1f, startScaleX, 1f, startScaleY, 0f, 0f);
+		TranslateAnimation translateAnimation = new TranslateAnimation(0, photoMeasureModel.left, 0, photoMeasureModel.top);
+		scaleAnimation.setFillAfter(true);
+		translateAnimation.setFillAfter(true);
+		AnimationSet set = new AnimationSet(true);
+		set.addAnimation(scaleAnimation);
+		set.addAnimation(translateAnimation);
+		set.setDuration(time);
+		set.setInterpolator(new DecelerateInterpolator());
+		shrinkView.startAnimation(set);
+		set.setAnimationListener(new Animation.AnimationListener() {
+
+			@Override public void onAnimationStart(Animation animation) {
+				if (animationListener != null) animationListener.startAnim(animation);
+			}
+
+			@Override public void onAnimationEnd(Animation animation) {
+				if (animationListener != null) animationListener.endAnim(animation);
+			}
+
+			@Override public void onAnimationRepeat(Animation animation) {
+				if (animationListener != null) animationListener.repeatAnim(animation);
+			}
+		});
+	}
+
+	/**
+	 * 放大动画
+	 *
+	 * @param activity
+	 * @param photoMeasureModel
+	 * @param magnifyView
+	 */
+	public static void magnifyAnimator(Activity activity, PhotoMeasureModel photoMeasureModel, final View magnifyView, final MAnimatorListener animListener) {
 		// 计算初始的缩放比例。最终的缩放比例为1。并调整缩放方向，使看着协调。
 		float startScaleX = (float) photoMeasureModel.width / getScreenWidth(activity);
 		float startScaleY = (float) photoMeasureModel.height / getScreenHeight(activity);
@@ -104,14 +164,14 @@ public class AnimTools {
 		AnimatorSet set = new AnimatorSet();
 		set.play(ObjectAnimator.ofFloat(magnifyView, View.X, photoMeasureModel.left, 0)).with(ObjectAnimator.ofFloat(magnifyView, View.Y, photoMeasureModel.top, 0))
 				.with(ObjectAnimator.ofFloat(magnifyView, View.SCALE_X, startScaleX, 1f)).with(ObjectAnimator.ofFloat(magnifyView, View.SCALE_Y, startScaleY, 1f));
-		set.setDuration(1100);
+		set.setDuration(time);
 		set.setInterpolator(new DecelerateInterpolator());
 		set.start();
 		set.addListener(new AnimatorListenerAdapter() {
 
 			@Override public void onAnimationStart(Animator animation) {
 				super.onAnimationStart(animation);
-				magnifyView.bringToFront();
+				// magnifyView.bringToFront();
 				if (animListener != null) animListener.startAnim(animation);
 			}
 
@@ -139,12 +199,12 @@ public class AnimTools {
 
 	/**
 	 * 缩小动画
-	 * 
+	 *
 	 * @param activity
 	 * @param photoMeasureModel
 	 * @param shrinkView
 	 */
-	public static void shrinkAnim(Activity activity, PhotoMeasureModel photoMeasureModel, View shrinkView, final OpenBookAnimListener animListener) {
+	public static void shrinkAnimator(Activity activity, PhotoMeasureModel photoMeasureModel, View shrinkView, final MAnimatorListener animListener) {
 		// 计算初始的缩放比例。最终的缩放比例为1。并调整缩放方向，使看着协调。
 		float startScaleX = (float) photoMeasureModel.width / getScreenWidth(activity);
 		float startScaleY = (float) photoMeasureModel.height / getScreenHeight(activity);
@@ -184,6 +244,24 @@ public class AnimTools {
 			}
 		});
 		set.start();
+	}
+
+	/**
+	 * 获得屏幕的宽度
+	 *
+	 * @return
+	 */
+	public static int getScreenWidth(Context context) {
+		return context.getResources().getDisplayMetrics().widthPixels;
+	}
+
+	/**
+	 * 获得屏幕的高度
+	 *
+	 * @return
+	 */
+	public static int getScreenHeight(Context context) {
+		return context.getResources().getDisplayMetrics().heightPixels;
 	}
 
 }
