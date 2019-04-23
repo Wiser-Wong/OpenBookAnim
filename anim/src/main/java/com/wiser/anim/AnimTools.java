@@ -22,7 +22,11 @@ import android.widget.ImageView;
  */
 public class AnimTools {
 
-	private static final int time = 1000;
+	private static int time = 1000;
+
+	public static void setDuration(int time) {
+		AnimTools.time = time;
+	}
 
 	/**
 	 * 打开书籍动画

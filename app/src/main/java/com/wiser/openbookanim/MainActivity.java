@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 				photoMeasureModel.right = ivClick.getRight();
 				photoMeasureModel.bottom = ivClick.getBottom();
 				photoMeasureModel.coverBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.cover);
+				AnimTools.setDuration(1500);
 				if (isOpen) {
 					isOpen = false;
 					AnimTools.openBookAnim(photoMeasureModel, ivCover, flContent, MainActivity.this, new OpenBookAnimationListener() {
