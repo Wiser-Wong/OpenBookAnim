@@ -7,7 +7,7 @@
 ### app目录下build.gradle配置
     dependencies { implementation 'com.github.Wiser-Wong:Frame:1.4.0' }
 ## 方法调用
-                PhotoMeasureModel photoMeasureModel = new PhotoMeasureModel();
+              PhotoMeasureModel photoMeasureModel = new PhotoMeasureModel();
 		photoMeasureModel.width = ivClick.getMeasuredWidth();
 		photoMeasureModel.height = ivClick.getMeasuredHeight();
 		photoMeasureModel.left = ivClick.getLeft();
