@@ -1,6 +1,9 @@
 # OpenBookAnim
 打开书籍动效
 
+## 请看动图
+![images](https://github.com/Wiser-Wong/OpenBookAnim/blob/master/images/anim.gif)
+
 ## 使用说明
 ### 项目下的build.gradle配置
     allprojects { repositories { ... maven { url 'https://jitpack.io' } } }
@@ -41,6 +44,3 @@
 				}
 			}
 		});
-
-## 请看动图
-![images](https://github.com/Wiser-Wong/OpenBookAnim/blob/master/images/anim.gif)
